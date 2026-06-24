@@ -12,6 +12,11 @@ There are 3 advantages of using this approach rather than the sandbox mode that 
 * homebrew
 * an account with a coding assistant provider (if using a proprietary assistant)
 
+## Caveats
+* These instructions are intended as a general guide, not a rigorous specification. Details may differ depending on your OS or hardware.
+* This sandbox setup allows access to the internet, so you still need to supervise your assistant.
+* The functions below are working examples only, they are not recommendations of best security practice. You are responsible for deciding what implementation gives you an appropriate balance of security and functionality.
+
 ## Do This Once
 
 The following steps only need to be carried out the first time you set up your sandbox.
