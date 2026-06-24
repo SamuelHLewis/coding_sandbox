@@ -28,6 +28,7 @@ source ~/.zshrc
 ```
 
 #### Google Antigravity
+Note: this command was valid as of 24/06/2026, but is fragile to changes in the antigravity installation script URL.
 ```
 agy_sandboxed() {
   # this allows the user to specify their working dir when launching the function
@@ -66,6 +67,7 @@ agy_sandboxed() {
 ```
 
 #### Claude Code
+Note: this command hasn't been verified yet, but was generated based on the Google Antigravity command above, so use at your own risk.
 ```
 claude_sandboxed() {
   local target_dir="${1:-$(pwd)}"
