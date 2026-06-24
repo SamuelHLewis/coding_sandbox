@@ -7,7 +7,14 @@ There are 3 advantages of using this approach rather than the sandbox mode that 
 2. Control & customisation: if you set up the sandbox, you know exactly which files the coding assistant can and cannot access, and you can tailor this access to match your risk appetite.
 3. No vendor dependency: you don't have to worry if the vendor of your coding assistant changes the configuration or pricing of their built-in sandbox.
 
+## Prerequisites
+* MacOS 12+
+* homebrew
+* an account with a coding assistant provider (if using a proprietory assistant)
+
 ## Do This Once
+
+The following steps only need to be carried out the first time you set up your sandbox.
 
 ### Podman Installation
 We use Podman because it doesn't require root privileges. To install it on MacOS, type into terminal:
@@ -111,6 +118,8 @@ claude_sandboxed() {
 ```
 
 ## Do This Each Time You Start Your Computer
+
+The following steps need to be run each time you start up your computer.
 
 ### Podman
 To start the VM, run:
