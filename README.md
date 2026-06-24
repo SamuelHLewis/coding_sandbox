@@ -10,7 +10,7 @@ There are 3 advantages of using this approach rather than the sandbox mode that 
 ## Prerequisites
 * MacOS 12+
 * homebrew
-* an account with a coding assistant provider (if using a proprietory assistant)
+* an account with a coding assistant provider (if using a proprietary assistant)
 
 ## Do This Once
 
@@ -26,7 +26,7 @@ Then create the lightweight Linux VM that will host your containers:
 ```
 podman machine init
 ```
-You only need to do this once, the machine is ready to start each time to turn on your computer.
+You only need to do this once, the machine is ready to start each time you turn on your computer.
 
 ### Podman Custom Command
 Add one of the functions below to your `.zshrc` or `.bash_profile`. Each follows the same general logic:
