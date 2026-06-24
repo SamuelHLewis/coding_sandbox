@@ -123,7 +123,7 @@ If you aren't in your working dir and want to mount it into the container, pass 
 ```
 agy_sandboxed ~/projects/myapp/
 ```
-You can also pass additional arguments to the coding assistant, but these *must* be passed after the working dir e.g. for Google Antigravity:
+You can also pass additional arguments to the coding assistant, but these *must* be passed after the working dir e.g. for Google Antigravity with a specific model:
 ```
-agy_sandboxed ~/projects/myapp/ --version
+agy_sandboxed ~/projects/myapp/ --model="Gemini 3.5 Flash (Medium)"
 ```
