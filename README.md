@@ -1,5 +1,11 @@
 # Coding Sandbox
-This is a guide for setting up a sandbox to run a coding assistant inside.
+This is a guide for setting up a coding assistant to run inside a sandbox.
+
+## Why Not Just Use My Coding Assistant's Sandbox Mode?
+There are 3 advantages of using this approach rather than the sandbox mode that is built in to the major coding assistants:
+1. True OS-level isolation: this approach isolates the coding assistant process at the operating system level, which is a stronger protection than the tool-specific restrictions at the application layer used by most built-in sandbox modes.
+2. Control & customisation: if you set up the sandbox, you know exactly which files the coding assistant can and cannot access, and you can tailor this access to match your risk appetite.
+3. No vendor dependency: you don't have to worry if the vendor of your coding assistant changes the configuration or pricing of their built-in sandbox.
 
 ## Do This Once
 
