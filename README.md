@@ -122,6 +122,44 @@ claude_sandboxed() {
 }
 ```
 
+#### OpenCode
+Note: this command hasn't been verified yet, but was generated based on the Google Antigravity command above, so use at your own risk.
+```
+opencode_sandboxed() {
+  local target_dir="${1:-$(pwd)}"
+  shift
+  
+  # 1. Create persistent config and binary folders on your Mac if they don't exist
+  # write permissions need to be explicitly given to the config folder for token refresh
+  mkdir -p "$HOME/.ai-sandbox-home/.local/bin"
+  mkdir -p "$HOME/.ai-sandbox-home/.opencode"
+  chmod 700 "$HOME/.ai-sandbox-home/.opencode"
+  
+  echo "Starting sandbox for directory: $target_dir"
+  
+  # 2. Run the container with an auto-installation fallback
+  podman run --rm -it \
+    -v "$HOME/.ai-sandbox-home:/root:Z" \
+    -v "$target_dir:/workspace" \
+    -w "/workspace" \
+    debian:stable-slim bash -c '
+      # always install certificates for authentication signing
+      apt-get update && apt-get install -y ca-certificates >/dev/null 2>&1
+      # Install opencode to the mounted persistent volume if it is missing
+      if [ ! -f /root/.local/bin/opencode ]; then
+        echo "OpenCode CLI not found in sandbox home. Fetching installer..."
+        apt-get install -y curl nodejs npm >/dev/null 2>&1
+        npm config set prefix /root/.local
+        npm install -g opencode-ai
+      fi
+      
+      # Ensure the binary is on the path and execute it with passed arguments
+      export PATH="/root/.local/bin:$PATH"
+      exec opencode "$@"
+    ' -- "$@"
+}
+```
+
 ## Do This Each Time You Start Your Computer
 
 The following steps need to be run each time you start up your computer.
