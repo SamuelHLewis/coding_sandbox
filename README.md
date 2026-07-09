@@ -47,22 +47,41 @@ podman build -t localhost/opencode-base ~/coding_sandbox/
 
 ### Podman Custom Command
 
-Add the function below to your shell config file (e.g. `.zshrc` or `.bash_profile`):
+Add the function below to your shell config file (e.g. `.zshrc` or `.bash_profile`). The helper now owns the logic that mirrors
+`$HOME/.config/opencode/opencode.jsonc` into the sandbox-owned config directory so that any credentials or preferences you store on your Mac
+are available inside the container before each launch.
 
 ```
 opencode_sandboxed() {
   local target_dir="${1:-$(pwd)}"
   shift
-  
-  # 1. Create persistent config and binary folders on your Mac if they don't exist
-  # write permissions need to be explicitly given to the config folder for token refresh
+
+  # 1. Ensure the sandbox layout exists
   mkdir -p "$HOME/.ai-sandbox-home/.local/bin"
   mkdir -p "$HOME/.ai-sandbox-home/.opencode"
   chmod 700 "$HOME/.ai-sandbox-home/.opencode"
-  
+
+  # 2. Mirror the host OpenCode config into the sandbox before starting
+  local OPENCODE_CONFIG_SRC="${OPENCODE_CONFIG_SRC:-$HOME/.config/opencode/opencode.jsonc}"
+  local OPENCODE_SANDBOX_CONFIG="${OPENCODE_SANDBOX_CONFIG:-$HOME/.ai-sandbox-home/.opencode/opencode.jsonc}"
+
+  if [ ! -f "$OPENCODE_CONFIG_SRC" ]; then
+    printf 'Host opencode config not present at %s, skipping copy.\n' "$OPENCODE_CONFIG_SRC" >&2
+  else
+    mkdir -p "$(dirname "$OPENCODE_SANDBOX_CONFIG")"
+    if [ -f "$OPENCODE_SANDBOX_CONFIG" ] && cmp -s "$OPENCODE_CONFIG_SRC" "$OPENCODE_SANDBOX_CONFIG"; then
+      chmod 600 "$OPENCODE_SANDBOX_CONFIG"
+      printf 'Sandbox opencode config already up to date (%s).\n' "$OPENCODE_SANDBOX_CONFIG" >&2
+    else
+      cp "$OPENCODE_CONFIG_SRC" "$OPENCODE_SANDBOX_CONFIG"
+      chmod 600 "$OPENCODE_SANDBOX_CONFIG"
+      printf 'Copied host opencode config into sandbox (%s).\n' "$OPENCODE_SANDBOX_CONFIG" >&2
+    fi
+  fi
+
   echo "Starting sandbox for directory: $target_dir"
-  
-  # 2. Run the container
+
+  # 3. Run the container
   podman run --rm -it \
     -v "$HOME/.ai-sandbox-home:/root:Z" \
     -v "$target_dir:/workspace" \
@@ -76,6 +95,11 @@ Once you have added the function, *don't forget to source the shell config file 
 ```
 source ~/.zshrc
 ```
+
+Inside the helper we define `OPENCODE_CONFIG_SRC` and `OPENCODE_SANDBOX_CONFIG`, but you can still override them via environment variables before sourcing the function.
+The function checks for the host config file, reproduces the `.opencode` directory if needed, avoids needless copies by comparing the source and destination,
+and always enforces `chmod 600` after a copy or confirmation. Running the helper therefore mirrors your host `opencode.jsonc` into `/root/.opencode/opencode.jsonc`
+inside the container via the existing Podman mount, while giving informative messages about what happened.
 
 ## How to Run
 
